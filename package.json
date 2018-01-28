@@ -1,0 +1,19 @@
+{
+  "name": "lhapi",
+  "version": "0.0.1",
+  "description": "Internet publishing platform for LHVM programs",
+  "main": "server/index.js",
+  "scripts": {
+    "test": "tape test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/skyleaf-design/lhapi.git"
+  },
+  "author": "Raphael and Zak",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/skyleaf-design/lhapi/issues"
+  },
+  "homepage": "https://github.com/skyleaf-design/lhapi#readme"
+}
