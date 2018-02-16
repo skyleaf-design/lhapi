@@ -118,6 +118,18 @@ The Maker entity inside the LHAPI client/server source code is a superset of the
 
 
 
+## LHAPI business logic and shared code.
+
+LHAPI entities use a class/protocol system provided by TypeScript--this provides static type checking, and code that is more self-documenting than the alternative entity/ability architecture.  The disadvantage is that static class/protocol systems are more verbose than dynamic object compositions (which the alternative "entity/ability system" is one of).
+
+
+
+
+
+
+
+
+
 ## LHAPI client
 To be completed.
 
@@ -128,6 +140,42 @@ Even though the client is rendered and navigated entirely within a single HTML p
 #### UI Rendering
 #### State management
 #### Build stack
+
+
+
+
+
+
+
+## The LHAPI build process
+
+As part of introducing TypeScript, we have a problem: the client code targets browser ES6, the server code targets Node (most of ES6) in CommonJS format, and other code needs to be shared between the two runtimes.  In additions, we need to **debug** and **test** the code in both runtimes.
+
+These problems are mitigated by the TypeScript compiler, module bundlers, sourcemaps, and other trickery, but it's good to remember that we are targeting two separate runtimes with a foreign language.
+
+### How is our build process set up?
+
+We have two separate build processes: a simple build process for the Node server-side code, and a complex process for the browser-bundled client-side code.
+
+#### npm scripts are the orchestrator
+npm commands start the build processes for the client and server.  The client build process is started by invoking gulp.  It's unclear right now how the server build process will be started: will this be tsc, gulp, nodemon, or ts-node?
+
+#### server build process
+The server code is compiled, by TypeScript, to target Node.  Sourcemaps are also output, to aid in debugging.
+
+Somehow, while the build/dev environment is running, we need to re-start the server, every time the TypeScript is successfully compiled into JS.
+
+#### client build process
+The client code is compiled by TypeScript into ES5 modules, and then handed off to an ES5 bundler, such as WebPack or Browserify.  Sourcemaps are output, to aid debugging.  Since we are running the ES5 modules through a bundler, we need a build pipeline, handled by gulp.
+
+#### build pipeline
+gulp is used to copy static assets, start a web server to serve the client code, run the watchify/browserify transforms, etc.
+
+We could also possibly use gulp to watch our server compilation output file, and re-start the server process when the file changes.
+
+### references
+#### Full-stack TypeScript project example
+[https://github.com/gilamran/fullstack-typescript]
 
 
 
