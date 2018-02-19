@@ -1,6 +1,9 @@
 # LHAPI entity/ability system
 Thoughts on a possible architecture: what would LHAPI look like if it was architected with entity/ability, instead of the class/protocol paradigm that TypeScript imposes?
 
+NOTE: these notes are for an alternate architecture which we chose NOT to use for LHAPI.
+
+
 ## Shared code, data model, and general technical concepts
 The main concept to grasp within LHAPI is its entity/ability system, which uses factory functions to create plain JS objects, runs them through "abilities", which attach methods/properties on them, and then serializes them to communicate with the LHAPI back-end.
 

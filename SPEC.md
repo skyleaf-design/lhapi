@@ -134,14 +134,55 @@ LHAPI entities use a class/protocol system provided by TypeScript--this provides
 To be completed.
 
 ### Architecture
+
+
 #### Route handling
+
+For the LHAPI client, we have the concept of front-end routes, that a human would navigate to, and a back-end route, were the client can interact with REST resouces via HTTP requests.
+
+###### front-end routes
+
+Shows the 
+`my.domain.tld/2342413253253452435`
+`my.domain.tld/2342413253253452435?artist=true`
+
+###### back-end routes
+
+`my.domain.tld/stack/` -> REST resource for stack entities
+`my.domain.tld/artist/` -> REST resource for artist entities
+`my.domain.tld/affordance/` -> REST resource for JWT
+
+
 ###### What is the purpose of URL routes in relation to the LHAPI single-page client?
 Even though the client is rendered and navigated entirely within a single HTML page, we want to provide routes, so that existing browser bookmark functionality can be used to fill state within the app once it loads.  We can use a `#` in the URL to "fake" a URL page change, when in reality, it is just a mechanism used to fill state in the application, on the existing page.
+
+
 #### UI Rendering
+
+The LHAPI UI consists entirely of the stack viewing client: there are **no** separate pages for user profiles, statistics, etc.  Everything is contained in the one page, with different sidebars, dialogs, and modals accomodating everything that is not primary content.
+
+For the most part, the React components that comprise the LHAPI client are stateless functions.  The main exception to this are:
+* Forms: these have to contain their own temporary state, to validate, before they allow the user to submit.
+* WebGL visualizer: the visualizer needs a DOM reference to the canvas element, in order to start and stop the running animation, and therefore it must be stateful.
+
+#### Main UI components
+
+* The stack visualizer
+* The artist profile
+* The stack action panel (fork, edit, delete)
+* The stack outline editor: right now, limited to simple, global transforms, such as slowing down time
+
 #### State management
+
+State is managed in Redux, even though there is no reason to pull in this library--I'm interested to see how this plays out with TypeScript.  Checking the Redux action creators and reducers will be difficult with TypeScript, but I believe the solution lies in TypeScript's **descriminated union types**.
+
+###### Reference
+[https://spin.atomicobject.com/2017/07/24/redux-action-pattern-typescript/]
+
+
 #### Build stack
 
-
+TypeScript -> Browserify orchestrated within a gulp build pipeline.  Notice that Babel is missing from the pipeline: we don't need it for anything, because TypeScript is a huge, monolithic compiler.
 
 
 
@@ -173,8 +214,8 @@ gulp is used to copy static assets, start a web server to serve the client code,
 
 We could also possibly use gulp to watch our server compilation output file, and re-start the server process when the file changes.
 
-### references
-#### Full-stack TypeScript project example
+###### reference
+
 [https://github.com/gilamran/fullstack-typescript]
 
 
