@@ -123,10 +123,15 @@ The Maker entity inside the LHAPI client/server source code is a superset of the
 LHAPI entities use a class/protocol system provided by TypeScript--this provides static type checking, and code that is more self-documenting than the alternative entity/ability architecture.  The disadvantage is that static class/protocol systems are more verbose than dynamic object compositions (which the alternative "entity/ability system" is one of).
 
 ### Classes and protocols: client
+* UIMaker: same as Maker, but also constructs relations one layer deep.
 
 ### Classes and protocols: server
+The server uses the unserialized descriptor objects to generate queries, and save data to the database.
+For requests, it queries the database, and then turns the returned results into Protobuf descriptors, to send over the wire.
 
 ### Classes and protocols: shared
+* Maker
+* Serializable
 
 ### Serialization
 
@@ -134,11 +139,7 @@ Done via Protobuf objects, which are constructed using factory functions that ar
 
 #### descriptors
 
-### Data to back-end record process
-
-### Data to front-end entity process
-
-
+All of the Entity objects should be able to product a Protobuf descriptor object, by running a simple function.
 
 
 
@@ -147,14 +148,12 @@ Done via Protobuf objects, which are constructed using factory functions that ar
 
 
 ## LHAPI client
-To be completed.
 
 ### Architecture
 
-
 #### Route handling
 
-For the LHAPI client, we have the concept of front-end routes, that a human would navigate to, and a back-end route, were the client can interact with REST resouces via HTTP requests.
+For the LHAPI client, we have the concept of front-end routes, that a human would navigate to, and a back-end route, were the client can interact with REST resouces via HTTP requests.  Both of these routes are matched using the npm `routes` package, since it works on the client and on the server.
 
 ###### front-end routes
 
@@ -188,9 +187,19 @@ For the most part, the React components that comprise the LHAPI client are state
 * The stack action panel (fork, edit, delete)
 * The stack outline editor: right now, limited to simple, global transforms, such as slowing down time
 
+#### Access Control
+
+We want to show different things to different classes of people, depending on their identity.  For example, if you were on the.root.url/2343242342342 looking at a stack animation, the author of the stack would see UI controls for modifying and deleting the stack, while all other users would see nothing.
+
+We verify their identities using JSON web tokens (JWT).  Every JWT is stored on the client, and contains the access control information for the logged-in user: this could be a "subtype" integer, or maybe an array of roles the user has access to.  All of this information is contained in the JWT client-side, and is cryptographically-verified by the server.
+
+Non-authenticated users could always forge their JWT, and see the admin parts of the UI, but as long as the REST resources are properly guarded on the server, none of the REST requests will be able to pull back any useful data.
+
 #### State management
 
-State is managed in Redux, even though there is no reason to pull in this library--I'm interested to see how this plays out with TypeScript.  Checking the Redux action creators and reducers will be difficult with TypeScript, but I believe the solution lies in TypeScript's **descriminated union types**.
+Global is managed in Redux, even though there is no reason to pull in this library--I'm interested to see how this plays out with TypeScript.  Checking the Redux action creators and reducers will be difficult with TypeScript, but I believe the solution lies in TypeScript's **descriminated union types**.
+
+But, the global redux state is used only about half of the time.  Components make use of standard React state (`this.state`), and also non-react state stored in instance properties (`this.my_own_state_object = {}`).
 
 ###### Reference
 [https://spin.atomicobject.com/2017/07/24/redux-action-pattern-typescript/]
