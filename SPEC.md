@@ -122,8 +122,10 @@ The Maker entity inside the LHAPI client/server source code is a superset of the
 
 LHAPI entities use a class/protocol system provided by TypeScript--this provides static type checking, and code that is more self-documenting than the alternative entity/ability architecture.  The disadvantage is that static class/protocol systems are more verbose than dynamic object compositions (which the alternative "entity/ability system" is one of).
 
+The constructor for LHAPI entities needs to handle constructing class instances, from both a plain JS object of values, and a Protobuf descriptor.
+
 ### Classes and protocols: client
-* UIMaker: same as Maker, but also constructs relations one layer deep.
+The client uses the shared entity class constructors, nothing special.
 
 ### Classes and protocols: server
 The server uses the unserialized descriptor objects to generate queries, and save data to the database.
